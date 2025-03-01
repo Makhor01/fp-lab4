@@ -1,0 +1,16 @@
+# dune exec /Users/maksimhorosev/Documents/fp_lab4/_build/default/main.exe
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Shared cache location: /Users/maksimhorosev/.cache/dune/db
+# Workspace root: /Users/maksimhorosev/Documents/fp_lab4
+# Auto-detected concurrency: 8
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Dev
+#  ; merlin = true
+#  ; fdo_target_exe = None
+#  ; build_dir = In_build_dir "default"
+#  ; instrument_with = []
+#  }
+$ /Users/maksimhorosev/.opam/default/bin/ocamlc.opt -config > /var/folders/m_/5ctdqw7d5lzffb2plgft0hvm0000gn/T/dune_d098d8_output
