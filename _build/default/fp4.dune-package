@@ -1,4 +1,4 @@
 (lang dune 3.16)
 (name fp4)
-(sections (lib .))
-(files (lib (META dune-package opam)))
+(sections (lib .) (doc ../../doc/fp4))
+(files (lib (META dune-package opam)) (doc (README.md)))

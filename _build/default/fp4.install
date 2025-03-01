@@ -3,3 +3,6 @@ lib: [
   "_build/install/default/lib/fp4/dune-package"
   "_build/install/default/lib/fp4/opam"
 ]
+doc: [
+  "_build/install/default/doc/fp4/README.md"
+]
