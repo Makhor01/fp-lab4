@@ -218,34 +218,37 @@ let show_solution nonogram =
 
   print_endline "Это решение нонограммы. Нажмите Enter, чтобы продолжить.";
   ignore (read_line ())  (* Ждём нажатия Enter *)
-
 (* Основной цикл игры с управлением WASD, -+, и show *)
 let play_nonogram nonogram =
   let size = Array.length nonogram.grid in
-  let cursor_x = ref 0 in
-  let cursor_y = ref 0 in
-  let rec play () =
-    print_nonogram nonogram !cursor_x !cursor_y;
+  let rec play cursor_x cursor_y grid =
+    print_nonogram { nonogram with grid } cursor_x cursor_y;
     print_endline "Используйте WASD для перемещения, '-' для очистки, '+' для закрашивания.";
     print_endline "Нажмите 'show', чтобы увидеть решение, или 'q' для выхода.";
-    if check_solution nonogram then (
-      print_nonogram nonogram !cursor_x !cursor_y;
+    if check_solution { nonogram with grid } then (
+      print_nonogram { nonogram with grid } cursor_x cursor_y;
       print_endline "Поздравляем! Вы решили нонограмму!";
       exit 0;
     );
     let input = read_line () in
     match input with
-    | "w" -> if !cursor_x > 0 then decr cursor_x; play ()
-    | "s" -> if !cursor_x < size - 1 then incr cursor_x; play ()
-    | "a" -> if !cursor_y > 0 then decr cursor_y; play ()
-    | "d" -> if !cursor_y < size - 1 then incr cursor_y; play ()
-    | "+" -> nonogram.grid.(!cursor_x).(!cursor_y) <- Some true; play ()
-    | "-" -> nonogram.grid.(!cursor_x).(!cursor_y) <- Some false; play ()
-    | "show" -> show_solution nonogram; play ()  (* Показываем решение *)
-    | "q" -> print_endline "Выход из игры."; exit 0
-    | _ -> print_endline "Некорректный ввод. Попробуйте снова."; play ()
+    | "w" -> play (max 0 (cursor_x - 1)) cursor_y grid
+    | "s" -> play (min (size - 1) (cursor_x + 1)) cursor_y grid
+    | "a" -> play cursor_x (max 0 (cursor_y - 1)) grid
+    | "d" -> play cursor_x (min (size - 1) (cursor_y + 1)) grid
+    | "+" ->
+        let new_grid = Array.copy grid in
+        new_grid.(cursor_x).(cursor_y) <- Some true;
+        play cursor_x cursor_y new_grid
+    | "-" ->
+        let new_grid = Array.copy grid in
+        new_grid.(cursor_x).(cursor_y) <- Some false;
+        play cursor_x cursor_y new_grid
+    | "show" -> show_solution nonogram; play cursor_x cursor_y grid  (* Показываем решение *)
+    | "q" -> print_endline "Выход из игры.";
+    | _ -> print_endline "Некорректный ввод. Попробуйте снова."; play cursor_x cursor_y grid
   in
-  play ()
+  play 0 0 (Array.copy nonogram.grid)  (* Начинаем с копии исходной сетки *)
 
 (* Запуск игры *)
 let () =
