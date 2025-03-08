@@ -1,15 +1,14 @@
 (* Тип для представления нонограммы *)
-(* Тип для представления нонограммы *)
 type nonogram = {
   rows : int list list;  (* Подсказки для строк *)
   cols : int list list;  (* Подсказки для столбцов *)
-  grid : bool option array array;  (* Сетка: None - неизвестно, Some true - закрашено, Some false - пусто *)
+  grid : bool option array array;  (* Сетка: Some true - закрашено, Some false - пусто *)
   solution : bool array array;  (* Решение нонограммы *)
 }
 
-(* Создание пустой сетки *)
+(* Создание пустой сетки, заполненной Some false *)
 let create_grid rows cols =
-  Array.make_matrix (List.length rows) (List.length cols) None
+  Array.make_matrix (List.length rows) (List.length cols) (Some false)
 
 (* Генерация случайной нонограммы *)
 let generate_nonogram size =
@@ -68,7 +67,6 @@ let print_nonogram nonogram cursor_x cursor_y =
     List.iter (fun col ->
       let hint = try List.nth col i with _ -> 0 in
       Printf.printf "|%2d " hint
-
     ) nonogram.cols;
     print_string "|";  (* Закрываем последнюю ячейку строки *)
     print_newline ()
@@ -98,15 +96,15 @@ let print_nonogram nonogram cursor_x cursor_y =
       if i = cursor_x && j = cursor_y then (
         (* Выделяем ячейку курсора *)
         match cell with
-        | None -> print_string ">.<"
         | Some true -> print_string ">#<"
         | Some false -> print_string ">x<"
+        | None -> print_string " . "
       ) else (
         (* Обычный вывод ячейки *)
         match cell with
-        | None -> print_string " . "
         | Some true -> print_string " # "
         | Some false -> print_string " x "
+        | None -> print_string " . "
       )
     ) row;
     print_string "|";  (* Закрываем последнюю ячейку строки *)
@@ -248,6 +246,7 @@ let play_nonogram nonogram =
     | _ -> print_endline "Некорректный ввод. Попробуйте снова."; play ()
   in
   play ()
+
 (* Запуск игры *)
 let () =
   Random.self_init ();
